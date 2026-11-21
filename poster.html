@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tidal Republic of Vess — Passport Spread</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1024px; height: 1024px; background: #23272e; display: flex; align-items: center; justify-content: center; font-family: Georgia, 'Times New Roman', serif; }
+  .spread { width: 984px; height: 800px; display: flex; background: #f5f0e1; box-shadow: 0 18px 50px rgba(0,0,0,.55); }
+  .page { width: 492px; height: 800px; padding: 30px 30px 24px; position: relative; color: #1f3a5f; }
+  .page.left { border-right: 1px solid #cfc6a8; box-shadow: inset -16px 0 22px -16px rgba(0,0,0,.45); }
+  .page.right { box-shadow: inset 16px 0 22px -16px rgba(0,0,0,.45); }
+
+  /* ---------- shared ---------- */
+  .rule { height: 2px; background: #1f3a5f; margin: 8px 0 12px; }
+  .rule.thin { height: 1px; background: #8a7f5c; }
+  .gold { color: #9a7b2d; }
+  .smallcaps { font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; }
+
+  /* ---------- left page ---------- */
+  .crest-row { display: flex; align-items: center; gap: 14px; }
+  .crest-row h1 { font-size: 21px; letter-spacing: 3.5px; font-weight: 700; line-height: 1.15; }
+  .crest-row h2 { font-size: 11px; letter-spacing: 4px; font-weight: 400; color: #5a5340; margin-top: 3px; }
+  .docline { display: flex; justify-content: space-between; margin-top: 12px; font-size: 11px; letter-spacing: 1.5px; font-weight: 700; }
+  .docline span b { color: #9a7b2d; }
+  .photodata { display: flex; gap: 18px; margin-top: 16px; }
+  .photo { width: 148px; height: 188px; border: 1px solid #8a7f5c; background: #cfd8dd; flex: none; position: relative; overflow: hidden; }
+  .photo svg { display: block; }
+  .photo .cap { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(31,58,95,.85); color: #f5f0e1; font-size: 8px; letter-spacing: 2px; text-align: center; padding: 3px 0; }
+  .fields { flex: 1; }
+  .field { margin-bottom: 9px; }
+  .field .lab { font-size: 8.5px; letter-spacing: 2px; color: #7a6f4d; text-transform: uppercase; }
+  .field .val { font-size: 15px; font-weight: 700; letter-spacing: .5px; border-bottom: 1px solid #c9bd97; padding-bottom: 2px; }
+  .field .val small { font-size: 11px; font-weight: 400; }
+  .sig { margin-top: 14px; }
+  .sig .lab { font-size: 8.5px; letter-spacing: 2px; color: #7a6f4d; text-transform: uppercase; }
+  .sig .name { font-family: Georgia, serif; font-style: italic; font-size: 21px; color: #2a3f5c; border-bottom: 1px solid #c9bd97; padding: 2px 0 4px; }
+  .mrz { position: absolute; left: 30px; right: 30px; bottom: 24px; background: #e9e2cc; border-top: 2px solid #1f3a5f; padding: 10px 12px 8px; font-family: 'Courier New', Courier, monospace; font-size: 12.5px; letter-spacing: 1px; line-height: 1.55; color: #22303f; white-space: nowrap; }
+  .mrz .tag { font-family: Georgia, serif; font-size: 8px; letter-spacing: 2px; color: #7a6f4d; display: block; margin-bottom: 3px; }
+
+  /* ---------- right page ---------- */
+  .visas-head { display: flex; justify-content: space-between; align-items: baseline; }
+  .visas-head h2 { font-size: 20px; letter-spacing: 5px; }
+  .visas-head span { font-size: 10px; letter-spacing: 1.5px; color: #7a6f4d; }
+  .visa { margin-top: 14px; border: 2px solid #1f3a5f; padding: 12px 14px 10px; position: relative; background: rgba(255,255,255,.35); }
+  .visa::after { content: ""; position: absolute; inset: 4px; border: 1px dashed #9a7b2d; pointer-events: none; }
+  .visa h3 { font-size: 13px; letter-spacing: 3px; text-align: center; }
+  .visa .cond { font-size: 12.5px; text-align: center; margin-top: 6px; line-height: 1.5; font-style: italic; }
+  .visa .cond b { font-style: normal; color: #a33b2e; letter-spacing: 1px; }
+  .visa .meta { display: flex; justify-content: space-between; margin-top: 8px; font-size: 10.5px; letter-spacing: 1px; }
+  .paid { position: absolute; right: 10px; top: 8px; transform: rotate(8deg); border: 2px solid #a33b2e; color: #a33b2e; font-size: 11px; letter-spacing: 2px; padding: 2px 7px; border-radius: 3px; opacity: .85; }
+  .stamps { position: relative; height: 250px; margin-top: 10px; }
+  .stamp { position: absolute; text-align: center; opacity: .82; font-family: Georgia, serif; }
+  .stamp.circ { width: 128px; height: 128px; border: 2.5px solid currentColor; border-radius: 50%; padding: 10px 8px; display: flex; flex-direction: column; justify-content: center; }
+  .stamp.circ::before { content: ""; position: absolute; inset: 5px; border: 1px solid currentColor; border-radius: 50%; }
+  .stamp.rect { border: 2.5px solid currentColor; padding: 8px 10px; border-radius: 2px; }
+  .stamp .t1 { font-size: 10px; letter-spacing: 2px; font-weight: 700; }
+  .stamp .t2 { font-size: 15px; letter-spacing: 1px; font-weight: 700; margin: 2px 0; }
+  .stamp .t3 { font-size: 9px; letter-spacing: 1.5px; }
+  .s1 { left: 6px; top: 8px; color: #2a4d8f; transform: rotate(-9deg); }
+  .s2 { right: 8px; top: 26px; color: #a33b2e; transform: rotate(6deg); }
+  .s3 { left: 118px; top: 128px; color: #2e6b4f; transform: rotate(-4deg); }
+  .s4 { right: 22px; top: 138px; color: #2a4d8f; transform: rotate(7deg); }
+  .tide { margin-top: 6px; border-top: 1px solid #8a7f5c; padding-top: 10px; }
+  .tide h4 { font-size: 10px; letter-spacing: 3px; color: #7a6f4d; margin-bottom: 6px; }
+  .tide table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+  .tide td { padding: 2.5px 0; border-bottom: 1px dotted #c9bd97; }
+  .tide td:last-child { text-align: right; font-weight: 700; }
+  .maprow { display: flex; gap: 14px; margin-top: 12px; align-items: center; }
+  .maprow p { font-size: 10.5px; line-height: 1.55; color: #4a4433; font-style: italic; }
+  .foot { position: absolute; left: 30px; right: 30px; bottom: 24px; font-size: 8.5px; letter-spacing: 1.5px; color: #7a6f4d; text-align: center; line-height: 1.6; }
+</style>
+</head>
+<body>
+<div class="spread">
+
+  <!-- ================= LEFT PAGE : DATA PAGE ================= -->
+  <div class="page left">
+    <div class="crest-row">
+      <svg width="56" height="56" viewBox="0 0 56 56">
+        <circle cx="28" cy="28" r="26" fill="none" stroke="#1f3a5f" stroke-width="2"/>
+        <circle cx="28" cy="28" r="21" fill="none" stroke="#9a7b2d" stroke-width="1"/>
+        <path d="M28 12 L28 34" stroke="#1f3a5f" stroke-width="2.5"/>
+        <path d="M22 16 L28 10 L34 16 Z" fill="#a33b2e"/>
+        <path d="M20 36 Q24 32 28 36 Q32 32 36 36 Q32 40 28 36 Q24 40 20 36" fill="none" stroke="#2a4d8f" stroke-width="1.8"/>
+        <path d="M18 42 Q23 38 28 42 Q33 38 38 42" fill="none" stroke="#2a4d8f" stroke-width="1.8"/>
+      </svg>
+      <div>
+        <h1>TIDAL REPUBLIC<br>OF VESS</h1>
+        <h2>PASSPORT &middot; PASPORTA VES</h2>
+      </div>
+    </div>
+    <div class="rule"></div>
+    <div class="docline"><span><b>TYPE</b> P</span><span><b>CODE</b> VES</span><span><b>No.</b> VES-08417-24</span></div>
+
+    <div class="photodata">
+      <div class="photo">
+        <svg width="148" height="188" viewBox="0 0 148 188">
+          <defs>
+            <radialGradient id="pbg" cx="50%" cy="38%" r="75%">
+              <stop offset="0%" stop-color="#dde5ea"/>
+              <stop offset="100%" stop-color="#b7c3cb"/>
+            </radialGradient>
+          </defs>
+          <rect width="148" height="188" fill="url(#pbg)"/>
+          <g fill="none" stroke="#9fb0ba" stroke-width="1" opacity="0.55">
+            <circle cx="74" cy="78" r="62"/><circle cx="74" cy="78" r="52"/><circle cx="74" cy="78" r="42"/>
+          </g>
+          <path d="M12,188 C18,152 42,138 74,138 C106,138 130,152 136,188 Z" fill="#2c3e55"/>
+          <path d="M60,140 L74,162 L88,140 L80,138 L74,146 L68,138 Z" fill="#f5f0e1"/>
+          <path d="M66,140 L74,152 L82,140" fill="none" stroke="#9a7b2d" stroke-width="1.4"/>
+          <rect x="63" y="116" width="22" height="26" fill="#d9a986"/>
+          <ellipse cx="74" cy="80" rx="46" ry="56" fill="#dfb08a"/>
+          <ellipse cx="28" cy="82" rx="7" ry="12" fill="#d9a986"/>
+          <ellipse cx="120" cy="82" rx="7" ry="12" fill="#d9a986"/>
+          <path d="M24,94 C18,36 46,14 74,14 C102,14 130,36 124,94 L114,94 C119,56 108,34 74,34 C40,34 29,56 34,94 Z" fill="#3d2b20"/>
+          <path d="M34,62 Q74,26 114,62 Q100,42 74,42 Q48,42 34,62 Z" fill="#3d2b20"/>
+          <path d="M46,72 Q56,66 66,71" fill="none" stroke="#3d2b20" stroke-width="3" stroke-linecap="round"/>
+          <path d="M82,71 Q92,66 102,72" fill="none" stroke="#3d2b20" stroke-width="3" stroke-linecap="round"/>
+          <ellipse cx="56" cy="80" rx="8" ry="5" fill="#fff"/>
+          <circle cx="56" cy="80" r="3.6" fill="#2e2620"/>
+          <ellipse cx="92" cy="80" rx="8" ry="5" fill="#fff"/>
+          <circle cx="92" cy="80" r="3.6" fill="#2e2620"/>
+          <path d="M48,79 Q56,74 64,79" fill="none" stroke="#8a6a4d" stroke-width="1.4"/>
+          <path d="M84,79 Q92,74 100,79" fill="none" stroke="#8a6a4d" stroke-width="1.4"/>
+          <path d="M74,82 L71,100 Q74,105 79,100" fill="none" stroke="#b98a63" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M62,116 Q74,110 86,116 Q74,123 62,116 Z" fill="#a85f52"/>
+          <path d="M62,116 Q74,112 86,116" fill="none" stroke="#8a4a40" stroke-width="1.4"/>
+          <ellipse cx="46" cy="98" rx="9" ry="5" fill="#c98d6b" opacity="0.35"/>
+          <ellipse cx="102" cy="98" rx="9" ry="5" fill="#c98d6b" opacity="0.35"/>
+        </svg>
+        <div class="cap">PHOTOGRAPH</div>
+      </div>
+      <div class="fields">
+        <div class="field"><div class="lab">Surname / Nom</div><div class="val">SELVANE</div></div>
+        <div class="field"><div class="lab">Given names / Pr&eacute;noms</div><div class="val">MARA ILSE</div></div>
+        <div class="field"><div class="lab">Nationality / Nationalit&eacute;</div><div class="val">VESSIAN</div></div>
+        <div class="field"><div class="lab">Date of birth / N&eacute;e le</div><div class="val">14 APR 1991 <small>&middot; LOWTIDE</small></div></div>
+        <div class="field"><div class="lab">Sex / Sexe &nbsp;&nbsp;·&nbsp;&nbsp; Height</div><div class="val">F &nbsp;&nbsp;·&nbsp;&nbsp; 1.68 m</div></div>
+        <div class="field"><div class="lab">Date of issue / D&eacute;livr&eacute; le</div><div class="val">12 MAR 2024</div></div>
+        <div class="field"><div class="lab">Date of expiry / Expire le</div><div class="val">11 MAR 2034</div></div>
+      </div>
+    </div>
+
+    <div class="sig">
+      <div class="lab">Holder's signature / Signature du titulaire</div>
+      <div class="name">Mara Selvane</div>
+    </div>
+    <div class="field" style="margin-top:10px"><div class="lab">Issuing authority / Autorit&eacute;</div><div class="val" style="font-size:13px">TIDE OFFICE, LOWTIDE &mdash; VESS</div></div>
+
+    <div class="mrz"><span class="tag">MACHINE READABLE ZONE</span>P&lt;VESSELVANE&lt;&lt;MARA&lt;ILSE&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br>VES0841724VES9104141F3403117&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;02</div>
+  </div>
+
+  <!-- ================= RIGHT PAGE : VISAS & STAMPS ================= -->
+  <div class="page right">
+    <div class="visas-head"><h2>VISAS</h2><span>SEE TIDE TABLE 7B</span></div>
+    <div class="rule"></div>
+
+    <div class="visa">
+      <div class="paid">PAID</div>
+      <h3>TIDE VISA &mdash; SINGLE CROSSING</h3>
+      <div class="cond">Valid <b>BETWEEN TIDES ONLY</b><br>causeway crossing permitted at low water<br>see tide table below</div>
+      <div class="meta"><span>ISSUED AT PORT KARROW</span><span>FEE: 12 CROWNS</span></div>
+    </div>
+
+    <div class="stamps">
+      <div class="stamp circ s1">
+        <div class="t1">PORT KARROW</div><div class="t2">ENTRY</div><div class="t3">03 JUN 2024</div>
+      </div>
+      <div class="stamp rect s2">
+        <div class="t1">DEPARTURE</div><div class="t2">HALDOR</div><div class="t3">17 JUN 2024</div>
+      </div>
+      <div class="stamp circ s3">
+        <div class="t1">THE SALT FLATS</div><div class="t2">ENTRY</div><div class="t3">02 SEP 2025</div>
+      </div>
+      <div class="stamp rect s4">
+        <div class="t1">ARRIVAL</div><div class="t2">LOWTIDE</div><div class="t3">09 SEP 2025</div>
+      </div>
+    </div>
+
+    <div class="tide">
+      <h4>TIDE TABLE &mdash; LOWTIDE CAUSEWAY &middot; 10 SEP 2025</h4>
+      <table>
+        <tr><td>Low water</td><td>06:12</td></tr>
+        <tr><td>High water</td><td>12:40</td></tr>
+        <tr><td>Low water</td><td>18:55</td></tr>
+      </table>
+    </div>
+
+    <div class="maprow">
+      <svg width="120" height="72" viewBox="0 0 120 72">
+        <path d="M6,58 Q30,44 58,54 T114,50" fill="none" stroke="#2a4d8f" stroke-width="1.4" stroke-dasharray="4 3"/>
+        <path d="M18,44 Q26,28 40,36 Q48,42 38,52 Q26,56 18,44 Z" fill="#c8b98a" stroke="#1f3a5f" stroke-width="1.2"/>
+        <path d="M58,30 Q70,16 84,26 Q92,34 80,42 Q66,46 58,30 Z" fill="#c8b98a" stroke="#1f3a5f" stroke-width="1.2"/>
+        <path d="M88,52 Q98,42 106,50 Q104,60 94,60 Q86,58 88,52 Z" fill="#c8b98a" stroke="#1f3a5f" stroke-width="1.2"/>
+        <circle cx="30" cy="44" r="2.4" fill="#a33b2e"/><text x="12" y="68" font-size="8" fill="#1f3a5f" font-family="Georgia, serif">LOWTIDE</text>
+        <text x="52" y="12" font-size="8" fill="#1f3a5f" font-family="Georgia, serif">THE VESS ISLES</text>
+      </svg>
+      <p>&ldquo;The isles are joined by the causeway at low water only; the sea takes the road back twice a day.&rdquo; &mdash; Tide Office notice</p>
+    </div>
+
+    <div class="foot">THIS PASSPORT IS THE PROPERTY OF THE TIDAL REPUBLIC OF VESS<br>AND MUST BE SURRENDERED ON DEMAND TO A TIDE OFFICER</div>
+  </div>
+
+</div>
+</body>
+</html>
